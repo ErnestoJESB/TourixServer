@@ -45,7 +45,7 @@ namespace WebApi.Services
             }
         }
 
-        public async Task<Response<ActividadDTO>> CrearActividad(ActividadDTO request)
+        public async Task<Response<ActividadCreateDTO>> CrearActividad(ActividadDTO request)
         {
             try
             {
@@ -58,12 +58,26 @@ namespace WebApi.Services
                 parameters.Add("@Direccion", request.Direccion, DbType.String);
                 parameters.Add("@Latitud", request.Latitud, DbType.Double);
                 parameters.Add("@Longitud", request.Longitud, DbType.Double);
+                parameters.Add("@LastID", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 using (var connection = _context.Database.GetDbConnection())
                 {
-                    await connection.ExecuteAsync("spCreateActividad", parameters, commandType: CommandType.StoredProcedure);            
+                    await connection.ExecuteAsync("spCreateActividad", parameters, commandType: CommandType.StoredProcedure);  
+                    
+                    var Respuesta = new ActividadCreateDTO
+                    {
+                        LastID = parameters.Get<int>("@LastID"),
+                        AgenciaID = request.AgenciaID,
+                        NombreActividad = request.NombreActividad,
+                        Descripcion = request.Descripcion,
+                        Precio = request.Precio,
+                        Duracion = request.Duracion,
+                        Direccion = request.Direccion,
+                        Latitud = request.Latitud,
+                        Longitud = request.Longitud
+                    };
 
-                    return new Response<ActividadDTO>(request, "Actividad registrada exitosamente.");
+                    return new Response<ActividadCreateDTO>(Respuesta, "Actividad registrada exitosamente.");
                 }
             }
             catch (Exception ex)
