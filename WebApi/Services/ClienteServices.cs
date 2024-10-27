@@ -31,14 +31,17 @@ namespace WebApi.Services
         }
         //crear cliente
         public async Task<Response<ClienteResponse>> CrearCliente(ClienteResponse request)
-        {
+        {  
             try
             {
+                // Generar el hash de la contraseña usando un salt de costo 10
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password, 10);
+
                 var parameters = new DynamicParameters();
                 parameters.Add("@Nombre", request.Nombre, DbType.String);
                 parameters.Add("@Apellido", request.Apellido, DbType.String);
                 parameters.Add("@Email", request.Email, DbType.String);
-                parameters.Add("@Password", request.Password, DbType.String);
+                parameters.Add("@Password", hashedPassword, DbType.String); 
                 parameters.Add("@Telefono", request.Telefono, DbType.String);
                 parameters.Add("@Resultado", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
 
@@ -49,7 +52,7 @@ namespace WebApi.Services
 
                     if (resultado.StartsWith("Error"))
                     {
-                        return new Response<ClienteResponse>(null, resultado);
+                        return new Response<ClienteResponse>(false, resultado);
                     }
 
                     return new Response<ClienteResponse>(request, "Cliente registrado exitosamente.");
@@ -60,6 +63,7 @@ namespace WebApi.Services
                 throw new Exception("Sucedió un error macabro: " + ex.Message);
             }
         }
+
 
         //Get cliente by id
         public async Task<Response<Cliente>> GetByID(int id)
@@ -148,18 +152,27 @@ namespace WebApi.Services
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@EmailInput", request.email, DbType.String);
-                parameters.Add("@Password", request.password, DbType.String);
-                parameters.Add("@Resultado", dbType: DbType.Boolean, size: 250, direction: ParameterDirection.Output);
+                parameters.Add("@Resultado", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                 parameters.Add("@ID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                 parameters.Add("@Nombre", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
                 parameters.Add("@EmailOutput", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
+                parameters.Add("@PasswordHash", dbType: DbType.String, size: 250, direction: ParameterDirection.Output); // Agregar el parámetro para el hash
 
                 using (var connection = _context.Database.GetDbConnection())
                 {
                     await connection.ExecuteAsync("spLoginClientes", parameters, commandType: CommandType.StoredProcedure);
                     var resultado = parameters.Get<bool>("@Resultado");
-                    
+
                     if (!resultado)
+                    {
+                        return new Response<LoginCliente>(null, "Credenciales incorrectas.");
+                    }
+
+                    // Obtener el hash de la contraseña del usuario
+                    string storedPasswordHash = parameters.Get<string>("@PasswordHash");
+
+                    // Verificar la contraseña
+                    if (!BCrypt.Net.BCrypt.Verify(request.password, storedPasswordHash))
                     {
                         return new Response<LoginCliente>(null, "Credenciales incorrectas.");
                     }
@@ -169,7 +182,7 @@ namespace WebApi.Services
                         ID = parameters.Get<int>("@ID"),
                         Nombre = parameters.Get<string>("@Nombre"),
                         Email = parameters.Get<string>("@EmailOutput"),
-                        Resultado = parameters.Get<bool>("@Resultado")
+                        Resultado = true // o puedes ajustar según tu lógica
                     });
                 }
             }
@@ -178,5 +191,6 @@ namespace WebApi.Services
                 throw new Exception("Sucedió un error macabro: " + ex.Message);
             }
         }
+
     }
 }
