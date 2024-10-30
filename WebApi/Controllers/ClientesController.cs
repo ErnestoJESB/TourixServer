@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Services;
+using BCrypt.Net;
 
 namespace WebApi.Controllers
 {
@@ -67,12 +68,20 @@ namespace WebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUser request)
         {
-            var response = await _clienteServices.Login(request);
-            if (!response.Success)
+            try
             {
-                return NotFound(response.Message);
+                var response = await _clienteServices.Login(request);
+                if (!response.Success)
+                {
+                    return NotFound(response.Message);
+                }
+                return Ok(response);
             }
-            return Ok(response);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
 }
