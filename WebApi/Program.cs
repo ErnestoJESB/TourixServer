@@ -20,6 +20,7 @@ builder.Services.AddTransient<IAgenciasServices, AgenciasServices>();
 builder.Services.AddTransient<IClienteServices, ClienteServices>();
 builder.Services.AddTransient<IReservacionesServices, ReservacionesServices>();
 builder.Services.AddTransient<IDisponibilidadActividadesServices, DisponibilidadActividadesServices>();
+builder.Services.AddTransient<IImagenesActividadesServices, ImagenesActividadesServices>();
 
 
 

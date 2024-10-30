@@ -16,6 +16,13 @@ namespace WebApi.Controllers
             _administradoresServices = administradoresServices;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAgencias()
+        {
+            var response = await _administradoresServices.GetAgencias();
+            return Ok(response);
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUser login)
         {

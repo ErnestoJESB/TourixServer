@@ -15,6 +15,21 @@ namespace WebApi.Services
             _context = context;
         }
 
+        public async Task<Response<List<Agencias>>> GetAgencias()
+        {
+            try
+            {
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var agencias = await connection.QueryAsync<Agencias>("spGetAgencias", commandType: CommandType.StoredProcedure);
+                    return new Response<List<Agencias>>(agencias.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<Agencias>>(false, $"Sucedió un error: {ex.Message}", null);
+            }
+        }
         public async Task<Response<AgenciasResponseDTO>> Login(LoginUser login)
         {
             try
