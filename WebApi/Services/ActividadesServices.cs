@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Domain.DTO;
 using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using WebApi.Context;
@@ -167,6 +168,31 @@ namespace WebApi.Services
                 throw new Exception("Sucedió un error macabro: " + ex.Message);
             }
         }
+
+
+        //get actividades by cercanía con [sp_GetNearbyActivities]
+        public async Task<Response<List<NearbyActivitidad>>> GetNearbyActividad(NearbyActividadDTO request)
+        {
+            try
+            {
+                
+                var parameters = new DynamicParameters();
+                parameters.Add("@user_lat", request.Latitud, DbType.Single);
+                parameters.Add("@user_lng", request.Longitud, DbType.Single);
+
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var res = await connection.QueryAsync<NearbyActivitidad>("sp_GetNearbyActivities", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<List<NearbyActivitidad>>(res.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Sucedió un error macabro: " + ex.Message);
+            }
+        }
+
+
 
     }
 }
