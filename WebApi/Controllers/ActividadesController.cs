@@ -87,5 +87,24 @@ namespace WebApi.Controllers
             var response = await _actividadesServices.GetActividadesByAgencia(id);
             return Ok(response);
         }
+
+        //get nearbyActividad
+        [HttpPost("ActividadCercana")]
+        public async Task<IActionResult> GetNearbyActividad([FromBody] NearbyActividadDTO request)
+        {
+            try
+            {           
+                var response = await _actividadesServices.GetNearbyActividad(request);
+
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
     }
 }
