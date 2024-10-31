@@ -64,12 +64,20 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Eliminar(int id)
         {
-            var response = await _actividadesServices.EliminarActividad(id);
-            if (!response.Success)
+            try
             {
-                return NotFound(response.Message);
+                var response = await _actividadesServices.EliminarActividad(id);
+                if (!response.Success)
+                {
+                    return NotFound(response.Message);
+                }
+                return Ok(response);
             }
-            return Ok(response);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
 
         //get actividades by agencia
