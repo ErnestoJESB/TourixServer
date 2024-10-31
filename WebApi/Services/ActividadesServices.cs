@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Domain.DTO;
 using Domain.Entities;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -18,27 +19,15 @@ namespace WebApi.Services
         }
 
         //obtencion de actividades
-        public async Task<Response<List<Actividades>>> GetActividades()
+        public async Task<Response<List<ActividadImagenDTO>>> GetActividades()
         {
             try
             {
-                List<Actividades> response = await _context.Actividades
-                    .Select(a => new Actividades
-                    {
-                        ActividadID = a.ActividadID,
-                        AgenciaID = a.AgenciaID,
-                        NombreActividad = a.NombreActividad,
-                        Descripcion = a.Descripcion,
-                        Precio = a.Precio,
-                        Duracion = a.Duracion,
-                        Direccion = a.Direccion,
-                        Latitud = (float)a.Latitud,  // Conversión explícita de double a float
-                        Longitud = (float)a.Longitud,  // Conversión explícita de double a float
-                        FechaCreacion = a.FechaCreacion
-                    })
-                    .ToListAsync();
-
-                return new Response<List<Actividades>>(response);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var actividades = await connection.QueryAsync<ActividadImagenDTO>("spGetActividades", commandType: CommandType.StoredProcedure);
+                    return new Response<List<ActividadImagenDTO>>(actividades.ToList());
+                }
             }
             catch (Exception ex)
             {
