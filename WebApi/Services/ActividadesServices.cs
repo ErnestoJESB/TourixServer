@@ -138,7 +138,7 @@ namespace WebApi.Services
             }
         }
         //get actividades by agencia con [spGetActividadesByAgencia]
-        public async Task<Response<List<Actividades>>> GetActividadesByAgencia(int id)
+        public async Task<Response<List<ActividadImagenDTO>>> GetActividadesByAgencia(int id)
         {
             try
             {
@@ -147,9 +147,9 @@ namespace WebApi.Services
 
                 using (var connection = _context.Database.GetDbConnection())
                 {
-                    var res = await connection.QueryAsync<Actividades>("spGetActividadesByAgencia", parameters, commandType: CommandType.StoredProcedure);
+                    var res = await connection.QueryAsync<ActividadImagenDTO>("spGetActividadesByAgencia", parameters, commandType: CommandType.StoredProcedure);
 
-                    return new Response<List<Actividades>>(res.ToList());
+                    return new Response<List<ActividadImagenDTO>>(res.ToList());
                 }
             }
             catch (Exception ex)
