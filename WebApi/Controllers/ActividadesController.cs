@@ -38,9 +38,16 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearActividad([FromBody] ActividadDTO request)
         {
-            var response = await _actividadesServices.CrearActividad(request);
+            try
+            {
+                var response = await _actividadesServices.CrearActividad(request);
 
-            return Ok(response);
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         //Obtener actividad x id
         [HttpGet("{id}")]
