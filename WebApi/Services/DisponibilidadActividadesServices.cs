@@ -52,5 +52,23 @@ namespace WebApi.Services
                 return new Response<DisponibilidadActividadesDTO>(false, $"Sucedió un error: {ex.Message}", null);
             }
         }
+
+        public async Task<Response<List<DisponibilidadByActividadDTO>>> GetDisponibilidadByActividad(int id)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ActividadID", id, DbType.Int32);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var disponibilidad = await connection.QueryAsync<DisponibilidadByActividadDTO>("spGetDisponibilidadByActividad", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<List<DisponibilidadByActividadDTO>>(disponibilidad.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<DisponibilidadByActividadDTO>>(false, $"Sucedió un error: {ex.Message}", null);
+            }
+        }
     }
 }

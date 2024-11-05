@@ -29,5 +29,13 @@ namespace WebApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDisponibilidadByActividad(int id)
+        {
+            var response = await _disponibilidadActividadesServices.GetDisponibilidadByActividad(id);
+
+            return Ok(response);
+        }
     }
 }
