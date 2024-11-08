@@ -90,12 +90,13 @@ namespace WebApi.Services
         {
             try
             {
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password, 10);
                 var parameters = new DynamicParameters();
                 parameters.Add("@ClienteID", id, DbType.Int32);
                 parameters.Add("@Nombre", request.Nombre, DbType.String);
                 parameters.Add("@Apellido", request.Apellido, DbType.String);
                 parameters.Add("@Email", request.Email, DbType.String);
-                parameters.Add("@Password", request.Password, DbType.String);
+                parameters.Add("@Password", hashedPassword, DbType.String);
                 parameters.Add("@Telefono", request.Telefono, DbType.String);
                 parameters.Add("@Resultado", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
 
