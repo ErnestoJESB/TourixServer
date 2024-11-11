@@ -31,6 +31,7 @@ namespace Domain.Entities
         public double Longitud { get; set; }
 
         public DateTime? FechaCreacion { get; set; }
-        public float Distancia {  get; set; }
+        public string ImagenURL { get; set; }
+        public float Distancia { get; set; }
     }
 }
