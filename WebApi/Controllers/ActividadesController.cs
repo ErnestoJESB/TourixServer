@@ -113,5 +113,18 @@ namespace WebApi.Controllers
 
         }
 
+        [HttpGet("LastReleases")]
+        public async Task<IActionResult> GetLastReleases()
+        {
+            var response = await _actividadesServices.GetLastReleases();
+            return Ok(response);
+        }
+
+        [HttpGet("Random")]
+        public async Task<IActionResult> GetRandom()
+        {
+            var response = await _actividadesServices.GetRandom();
+            return Ok(response);
+        }
     }
 }

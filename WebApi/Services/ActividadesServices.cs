@@ -76,18 +76,23 @@ namespace WebApi.Services
             }
         }
 
-        public async Task<Response<Actividades>> GetByID(int id)
+        public async Task<Response<ActividadImagenDTO>> GetByID(int id)
         {
             try
             {
-                Actividades res = await _context.Actividades.FirstOrDefaultAsync(x => x.ActividadID == id);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@ActividadID", id, DbType.Int32);
 
-                return new Response<Actividades>(res);
+                    var actividad = await connection.QueryFirstOrDefaultAsync<ActividadImagenDTO>("spGetActividadByID", parameters, commandType: CommandType.StoredProcedure);
+
+                    return new Response<ActividadImagenDTO>(actividad!);
+                }
             }
             catch (Exception ex)
             {
-
-                throw new Exception("Ocurrio un error" + ex.Message);
+                throw new Exception("Sucedió un error macabro: " + ex.Message);
             }
         }
         //Actualizacion de actividad con spUpdateActividad
@@ -181,7 +186,37 @@ namespace WebApi.Services
             }
         }
 
+        public async Task<Response<List<ActividadImagenDTO>>> GetLastReleases()
+        {
+            try
+            {
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var res = await connection.QueryAsync<ActividadImagenDTO>("spGetLastReleases", commandType: CommandType.StoredProcedure);
+                    return new Response<List<ActividadImagenDTO>>(res.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Sucedió un error macabro: " + ex.Message);
+            }
+        }
 
+        public async Task<Response<List<ActividadImagenDTO>>> GetRandom()
+        {
+            try
+            {
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var res = await connection.QueryAsync<ActividadImagenDTO>("spGetRandom", commandType: CommandType.StoredProcedure);
+                    return new Response<List<ActividadImagenDTO>>(res.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Sucedió un error macabro: " + ex.Message);
+            }
+        }
 
     }
 }
