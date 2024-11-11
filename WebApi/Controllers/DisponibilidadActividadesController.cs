@@ -34,7 +34,13 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetDisponibilidadByActividad(int id)
         {
             var response = await _disponibilidadActividadesServices.GetDisponibilidadByActividad(id);
+            return Ok(response);
+        }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDisponibilidad(int id)
+        {
+            var response = await _disponibilidadActividadesServices.DeleteDisponibilidades(id);
             return Ok(response);
         }
     }

@@ -70,5 +70,23 @@ namespace WebApi.Services
                 return new Response<List<DisponibilidadByActividadDTO>>(false, $"Sucedió un error: {ex.Message}", null);
             }
         }
+
+        public async Task<Response<bool>> DeleteDisponibilidades(int id)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ActividadID", id, DbType.Int32);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    await connection.ExecuteAsync("spDeleteDisponibilidadActividad", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<bool>(true, "Disponibilidad eliminada exitosamente.", true);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<bool>(false, $"Sucedió un error: {ex.Message}", false);
+            }
+        }
     }
 }
