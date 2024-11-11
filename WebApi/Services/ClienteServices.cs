@@ -90,13 +90,10 @@ namespace WebApi.Services
         {
             try
             {
-                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password, 10);
                 var parameters = new DynamicParameters();
                 parameters.Add("@ClienteID", id, DbType.Int32);
                 parameters.Add("@Nombre", request.Nombre, DbType.String);
                 parameters.Add("@Apellido", request.Apellido, DbType.String);
-                parameters.Add("@Email", request.Email, DbType.String);
-                parameters.Add("@Password", hashedPassword, DbType.String);
                 parameters.Add("@Telefono", request.Telefono, DbType.String);
                 parameters.Add("@Resultado", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
 
@@ -156,7 +153,9 @@ namespace WebApi.Services
                 parameters.Add("@Resultado", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                 parameters.Add("@ID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                 parameters.Add("@Nombre", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
-                parameters.Add("@EmailOutput", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
+                parameters.Add("@Apellido", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
+                parameters.Add("@Telefono", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
+                parameters.Add("@EmailOutput", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);        
                 parameters.Add("@PasswordHash", dbType: DbType.String, size: 250, direction: ParameterDirection.Output); // Agregar el parámetro para el hash
 
                 using (var connection = _context.Database.GetDbConnection())
@@ -183,6 +182,8 @@ namespace WebApi.Services
                         ID = parameters.Get<int>("@ID"),
                         Nombre = parameters.Get<string>("@Nombre"),
                         Email = parameters.Get<string>("@EmailOutput"),
+                        Apellido = parameters.Get<string>("@Apellido"),
+                        Telefono = parameters.Get<string>("@Telefono"),
                         Resultado = true // o puedes ajustar según tu lógica
                     });
                 }
