@@ -36,7 +36,7 @@ namespace WebApi.Services
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@EmailInput", login.email, DbType.String);
-                parameters.Add("@Password", login.password, DbType.String);
+                parameters.Add("@Password", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
                 parameters.Add("@Resultado", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                 parameters.Add("@ID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                 parameters.Add("@Nombre", dbType: DbType.String, size: 250, direction: ParameterDirection.Output);
@@ -50,22 +50,26 @@ namespace WebApi.Services
                     var ID = parameters.Get<int>("@ID");
                     var Nombre = parameters.Get<string>("@Nombre");
                     var EmailOutput = parameters.Get<string>("@EmailOutput");
-
-                    if (resultado)
+                    var Password = parameters.Get<string>("@Password");
+                    
+                    if (!resultado)
                     {
-                        var response = new AgenciasResponseDTO
+                        return new Response<AgenciasResponseDTO>(false, "Credenciales incorrectas.");
+                    }
+
+                    string storedPasswordHash = parameters.Get<string>("@Password");
+                        if (!BCrypt.Net.BCrypt.Verify(login.password, storedPasswordHash))
                         {
-                            ID = ID,
-                            Nombre = Nombre,
-                            Correo = EmailOutput
-                        };
+                            return new Response<AgenciasResponseDTO>(false, "Credenciales incorrectas.");
+                        }
 
-                        return new Response<AgenciasResponseDTO>(true, "Usuario logueado exitosamente.", response);
-                    }
-                    else
-                    {
-                        return new Response<AgenciasResponseDTO>(false, "Credenciales incorrectas.", null);
-                    }
+                        return new Response<AgenciasResponseDTO>(new AgenciasResponseDTO
+                        {
+                            ID = parameters.Get<int>("@ID"),
+                            Nombre = parameters.Get<string>("@Nombre"),
+                            Correo = parameters.Get<string>("@EmailOutput"),
+                        });
+                    
                 }
             }
             catch (Exception ex)
@@ -78,13 +82,14 @@ namespace WebApi.Services
         {
             try
             {
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(agencia.Password, 10);
                 var parameters = new DynamicParameters();
                 parameters.Add("@Nombre", agencia.NombreAgencia, DbType.String);
                 parameters.Add("@Email", agencia.Email, DbType.String);
                 parameters.Add("@Telefono", agencia.Telefono, DbType.String);
                 parameters.Add("@Direccion", agencia.Direccion, DbType.String);
                 parameters.Add("@Descripcion", agencia.Descripcion, DbType.String);
-                parameters.Add("@Password", agencia.Password, DbType.String);
+                parameters.Add("@Password", hashedPassword, DbType.String);
 
                 using (var connection = _context.Database.GetDbConnection())
                 {
