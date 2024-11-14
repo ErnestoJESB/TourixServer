@@ -64,7 +64,7 @@ namespace WebApi.Services
 
                 using (var connection = _context.Database.GetDbConnection())
                 {
-                    await connection.ExecuteAsync("spCrearReservacion", parameters, commandType: CommandType.StoredProcedure);
+                    await connection.ExecuteAsync("spCreateReservaciones", parameters, commandType: CommandType.StoredProcedure);
                     return new Response<ReservacionCreateDTO>(true, "Reservación creada exitosamente.", request);
                 }
             }
