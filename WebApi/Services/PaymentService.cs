@@ -12,7 +12,7 @@ namespace WebApi.Services
         {
             var config = new Dictionary<string, string>
         {
-            { "mode", "live" }, // Cambia a "live" en producción
+            { "mode", "sabdbox" }, // Cambia a "live" en producción
             { "clientId", clientId },
             { "clientSecret", clientSecret }
         };
