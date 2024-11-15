@@ -40,7 +40,7 @@ namespace WebApi.Services
                 parameters.Add("@Tipo", tipo, DbType.String);
                 using (var connection = _context.Database.GetDbConnection())
                 {
-                    var reservaciones = await connection.QueryAsync<Reservaciones>("spGetReservacionesTipo", parameters, commandType: CommandType.StoredProcedure);
+                    var reservaciones = await connection.QueryAsync<Reservaciones>("spGetReservacionesByTipo", parameters, commandType: CommandType.StoredProcedure);
                     return new Response<List<Reservaciones>>(reservaciones.ToList());
                 }
             }
