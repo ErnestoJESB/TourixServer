@@ -40,8 +40,8 @@ namespace WebApi.Services
             },
                 redirect_urls = new RedirectUrls
                 {
-                    return_url = "https://tusitio.com/success",
-                    cancel_url = "https://tusitio.com/cancel"
+                    return_url = "myapp://success",
+                    cancel_url = "myapp://cancel"
                 }
             };
 
