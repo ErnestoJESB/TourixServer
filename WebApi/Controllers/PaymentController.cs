@@ -35,6 +35,35 @@ namespace WebApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("paypal/success")]
+        public async Task<IActionResult> PaymentSuccess(string paymentId, string PayerID)
+        {
+            try
+            {
+                var result = await _paymentService.ExecutePayment(paymentId, PayerID);
+                if (result == "approved")
+                {
+                    return Ok(new { status = true, message = "Pago exitoso" }); // Redirige a una página de éxito en tu app
+                }
+                else
+                {
+                    return Ok(new { status = false, message = "Pago no aprobado" }); // Redirige a una página de error
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = "Pago no aprobado" }); // Muestra un error genérico
+            }
+        }
+
+        [HttpGet("paypal/cancel")]
+        public IActionResult PaymentCancelled()
+        {
+            return Ok(new { status = false, message = "Pago no aprobado" }); // Redirige a una página de cancelación en tu app
+        }
+
+
     }
 
 }

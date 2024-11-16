@@ -12,7 +12,7 @@ namespace WebApi.Services
         {
             var config = new Dictionary<string, string>
         {
-            { "mode", "sabdbox" }, // Cambia a "live" en producción
+            { "mode", "sandbox" }, // Cambia a "live" en producción
             { "clientId", clientId },
             { "clientSecret", clientSecret }
         };
@@ -40,13 +40,42 @@ namespace WebApi.Services
             },
                 redirect_urls = new RedirectUrls
                 {
-                    return_url = "myapp://success",
-                    cancel_url = "myapp://cancel"
+                    return_url = "https://tourix.azurewebsites.net/paypal/success",
+                    cancel_url = "https://tourix.azurewebsites.net/paypal/cancel"
                 }
             };
 
             var createdPayment = payment.Create(apiContext);
             return createdPayment.links.FirstOrDefault(link => link.rel == "approval_url")?.href;
+        }
+
+        public async Task<string> ExecutePayment(string paymentId, string payerId)
+        {
+            try
+            {
+                var config = new Dictionary<string, string>
+                {
+                    { "mode", "sandbox" }, // Cambia a "live" en producción
+                    { "clientId", clientId },
+                    { "clientSecret", clientSecret }
+                };
+
+                var apiContext = new APIContext(new OAuthTokenCredential(clientId, clientSecret, config).GetAccessToken())
+                {
+                    Config = config
+                };
+
+                var paymentExecution = new PaymentExecution { payer_id = payerId };
+                var payment = new Payment { id = paymentId };
+
+                var executedPayment = payment.Execute(apiContext, paymentExecution);
+
+                return executedPayment.state; // Debería retornar "approved" si fue exitoso
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al ejecutar el pago: " + ex.Message);
+            }
         }
     }
 
