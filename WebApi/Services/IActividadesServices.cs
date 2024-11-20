@@ -16,7 +16,7 @@ namespace WebApi.Services
         public Task<Response<List<NearbyActivitidad>>> GetNearbyActividad(NearbyActividadDTO request);
         public Task<Response<List<ActividadImagenDTO>>> GetLastReleases();
         public Task<Response<List<ActividadImagenDTO>>> GetRandom();
-        public Task<Response<LogDTO>> LogActividad(LogDTO request)
+        public Task<Response<LogDTO>> LogActividad(LogDTO request);
 
     }
 }
