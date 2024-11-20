@@ -3,6 +3,7 @@ using Domain.DTO;
 using Domain.Entities;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using WebApi.Context;
@@ -210,6 +211,27 @@ namespace WebApi.Services
                 {
                     var res = await connection.QueryAsync<ActividadImagenDTO>("spGetRandom", commandType: CommandType.StoredProcedure);
                     return new Response<List<ActividadImagenDTO>>(res.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Sucedió un error macabro: " + ex.Message);
+            }
+        }
+
+        public async Task<Response<LogDTO>> LogActividad(LogDTO request)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Timestamp", request.Timestamp, DbType.DateTime);
+                parameters.Add("@Message", request.Message, DbType.String);
+
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    await connection.ExecuteAsync("sp_SaveLog", parameters, commandType: CommandType.StoredProcedure);
+
+                    return new Response<LogDTO>(request, "Log creado exitosamente");
                 }
             }
             catch (Exception ex)

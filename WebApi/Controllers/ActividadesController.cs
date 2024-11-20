@@ -126,5 +126,21 @@ namespace WebApi.Controllers
             var response = await _actividadesServices.GetRandom();
             return Ok(response);
         }
+
+        [HttpPost("Log")]
+        public async Task<IActionResult> LogActividad([FromBody] LogDTO request)
+        {
+            try
+            {
+                var response = await _actividadesServices.LogActividad(request);
+
+                return Ok(response);
+            }
+
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
