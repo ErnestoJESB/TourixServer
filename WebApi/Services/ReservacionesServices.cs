@@ -74,7 +74,7 @@ namespace WebApi.Services
             }
         }
 
-        public async Task<Response<List<Reservaciones>>> GetReservacionesByAgencia(int id)
+        public async Task<Response<List<ReservacionDTO>>> GetReservacionesByAgencia(int id)
         {
             try
             {
@@ -82,13 +82,13 @@ namespace WebApi.Services
                 parameters.Add("@AgenciaID", id, DbType.Int32);
                 using (var connection = _context.Database.GetDbConnection())
                 {
-                    var reservaciones = await connection.QueryAsync<Reservaciones>("spGetReservacionesByAgencia", parameters, commandType: CommandType.StoredProcedure);
-                    return new Response<List<Reservaciones>>(reservaciones.ToList());
+                    var reservaciones = await connection.QueryAsync<ReservacionDTO>("spGetReservacionesByAgencia", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<List<ReservacionDTO>>(reservaciones.ToList());
                 }
             }
             catch (Exception ex)
             {
-                return new Response<List<Reservaciones>>(false, $"Sucedió un error: {ex.Message}");
+                return new Response<List<ReservacionDTO>>(false, $"Sucedió un error: {ex.Message}");
             }
         }
     }

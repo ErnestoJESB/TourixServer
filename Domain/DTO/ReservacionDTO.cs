@@ -8,9 +8,9 @@ namespace Domain.DTO
 {
     public class ReservacionDTO
     {
-        public int ClienteID { get; set; }
-        public int? ActividadID { get; set; }
-        public int? PaqueteID { get; set; }
+        public int ReservacionID { get; set; }
+        public string NombreCliente{ get; set; }
+        public string NombreActividad{ get; set; }
         public DateTime FechaReservacion { get; set; }
         public int CantidadPersonas { get; set; }
         public string Estado { get; set; }
