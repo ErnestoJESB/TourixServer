@@ -37,5 +37,13 @@ namespace WebApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("Agencia/{id}")]
+        public async Task<IActionResult> GetReservacionesByAgencia(int id)
+        {
+            var response = await _reservacionesServices.GetReservacionesByAgencia(id);
+
+            return Ok(response);
+        }
     }
 }

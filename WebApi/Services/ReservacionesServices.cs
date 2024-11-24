@@ -73,5 +73,23 @@ namespace WebApi.Services
                 return new Response<ReservacionCreateDTO>(false, $"Sucedió un error: {ex.Message}");
             }
         }
+
+        public async Task<Response<List<Reservaciones>>> GetReservacionesByAgencia(int id)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@AgenciaID", id, DbType.Int32);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var reservaciones = await connection.QueryAsync<Reservaciones>("spGetReservacionesByAgencia", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<List<Reservaciones>>(reservaciones.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<Reservaciones>>(false, $"Sucedió un error: {ex.Message}");
+            }
+        }
     }
 }
