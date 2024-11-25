@@ -43,5 +43,12 @@ namespace WebApi.Controllers
             var response = await _disponibilidadActividadesServices.DeleteDisponibilidades(id);
             return Ok(response);
         }
+
+        [HttpPut("{disponibilidadID}")]
+        public async Task<IActionResult> UpdateDisponibilidad(int disponibilidadID, [FromBody] int cupoReservado)
+        {
+            var response = await _disponibilidadActividadesServices.UpdateDisponibilidad(disponibilidadID, cupoReservado);
+            return Ok(response);
+        }
     }
 }

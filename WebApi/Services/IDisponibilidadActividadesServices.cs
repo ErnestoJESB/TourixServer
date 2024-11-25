@@ -8,6 +8,7 @@ namespace WebApi.Services
         Task<Response<List<DisponibilidadActividades>>> GetDisponibilidad();
         Task<Response<DisponibilidadActividadesDTO>> CreateDisponibilidad(DisponibilidadActividadesDTO request);
         Task<Response<List<DisponibilidadByActividadDTO>>> GetDisponibilidadByActividad (int id);
+        Task<Response<bool>> UpdateDisponibilidad(int disponibilidadID, int cupoReservado);
         Task<Response<bool>> DeleteDisponibilidades(int id);
     }
 }

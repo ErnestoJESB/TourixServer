@@ -88,5 +88,24 @@ namespace WebApi.Services
                 return new Response<bool>(false, $"Sucedió un error: {ex.Message}", false);
             }
         }
+
+        public async Task<Response<bool>> UpdateDisponibilidad(int disponibilidadID, int cupoReservado)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@DisponibilidadID", disponibilidadID, DbType.Int32);
+                parameters.Add("@CupoReservado", cupoReservado, DbType.Int32);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    await connection.ExecuteAsync("spUpdateDisponibilidadActividad", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<bool>(true, "Disponibilidad actualizada exitosamente.", true);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<bool>(false, $"Sucedió un error: {ex.Message}", false);
+            }
+        }
     }
 }
