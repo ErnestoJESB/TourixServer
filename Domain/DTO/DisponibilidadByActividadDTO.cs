@@ -8,6 +8,7 @@ namespace Domain.DTO
 {
     public class DisponibilidadByActividadDTO
     {
+        public int DisponibilidadID { get; set; }
         public int ActividadId { get; set; }
         public int CupoRestante { get; set; }
         public DateTime FechaHora { get; set; }
