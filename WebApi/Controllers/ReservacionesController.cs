@@ -53,5 +53,13 @@ namespace WebApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReservacion(int id)
+        {
+            var response = await _reservacionesServices.DeleteReservacion(id);
+
+            return Ok(response);
+        }
     }
 }

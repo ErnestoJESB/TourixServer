@@ -110,5 +110,23 @@ namespace WebApi.Services
                 return new Response<bool>(false, $"Sucedió un error: {ex.Message}");
             }
         }
+
+        public async Task<Response<bool>> DeleteReservacion(int id)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ReservacionID", id, DbType.Int32);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    await connection.ExecuteAsync("spDeleteReservacion", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<bool>(true, "Reservación eliminada exitosamente.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<bool>(false, $"Sucedió un error: {ex.Message}");
+            }
+        }
     }
 }
