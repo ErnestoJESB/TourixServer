@@ -9,6 +9,7 @@ namespace WebApi.Services
         public Task<Response<List<Reservaciones>>> GetReservacionesTipo( string tipo );
         public Task<Response<ReservacionCreateDTO>> CreateReservacion(ReservacionCreateDTO request);
         public Task<Response<List<ReservacionDTO>>> GetReservacionesByAgencia(int id);
+        public Task<Response<bool>> UpdateReservacion(int id, string Estado);
 
     }
 }

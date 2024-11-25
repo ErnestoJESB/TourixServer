@@ -7,7 +7,7 @@ using WebApi.Context;
 
 namespace WebApi.Services
 {
-    public class ReservacionesServices :IReservacionesServices
+    public class ReservacionesServices : IReservacionesServices
     {
         private readonly ApplicationDBContext _context;
 
@@ -16,11 +16,11 @@ namespace WebApi.Services
             _context = context;
         }
 
-        public async Task<Response<List<Reservaciones>>> GetReservaciones() 
+        public async Task<Response<List<Reservaciones>>> GetReservaciones()
         {
             try
             {
-               using (var connection = _context.Database.GetDbConnection())
+                using (var connection = _context.Database.GetDbConnection())
                 {
                     var reservaciones = await connection.QueryAsync<Reservaciones>("spGetReservaciones", commandType: CommandType.StoredProcedure);
                     return new Response<List<Reservaciones>>(reservaciones.ToList());
@@ -32,7 +32,7 @@ namespace WebApi.Services
             }
         }
 
-        public async Task<Response<List<Reservaciones>>> GetReservacionesTipo (string tipo)
+        public async Task<Response<List<Reservaciones>>> GetReservacionesTipo(string tipo)
         {
             try
             {
@@ -89,6 +89,25 @@ namespace WebApi.Services
             catch (Exception ex)
             {
                 return new Response<List<ReservacionDTO>>(false, $"Sucedió un error: {ex.Message}");
+            }
+        }
+
+        public async Task<Response<bool>> UpdateReservacion(int id, string Estado)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ReservacionID", id, DbType.Int32);
+                parameters.Add("@Estado", Estado, DbType.String);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    await connection.ExecuteAsync("spUpdateReservacion", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<bool>(true, "Reservación actualizada exitosamente.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<bool>(false, $"Sucedió un error: {ex.Message}");
             }
         }
     }

@@ -45,5 +45,13 @@ namespace WebApi.Controllers
 
             return Ok(response);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateReservacion(int id, [FromBody] string Estado)
+        {
+            var response = await _reservacionesServices.UpdateReservacion(id, Estado);
+
+            return Ok(response);
+        }
     }
 }
