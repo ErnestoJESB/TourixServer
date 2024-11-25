@@ -14,5 +14,6 @@ namespace Domain.DTO
         public decimal Total { get; set; }
         public string Tipo { get; set; }
         public int ID { get; set; }
+        public int DisponibilidadID { get; set; }
     }
 }

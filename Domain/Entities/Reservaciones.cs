@@ -19,5 +19,6 @@ namespace Domain.Entities
         public string Estado { get; set; }
         public decimal Total { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
+        public int DisponibilidadID { get; set; }
     }
 }

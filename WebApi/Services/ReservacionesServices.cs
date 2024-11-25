@@ -61,6 +61,7 @@ namespace WebApi.Services
                 parameters.Add("@Total", request.Total, DbType.Decimal);
                 parameters.Add("@Tipo", request.Tipo, DbType.String);
                 parameters.Add("@ID", request.ID, dbType: DbType.Int32);
+                parameters.Add("@DisponibilidadID", request.DisponibilidadID, dbType: DbType.Int32);
 
                 using (var connection = _context.Database.GetDbConnection())
                 {
