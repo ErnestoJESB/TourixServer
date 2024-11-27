@@ -23,6 +23,7 @@ builder.Services.AddTransient<IDisponibilidadActividadesServices, Disponibilidad
 builder.Services.AddTransient<IImagenesActividadesServices, ImagenesActividadesServices>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
 builder.Services.AddTransient<ICorreoServices, CorreoServices>();
+builder.Services.AddTransient<IDashboardServices, DashboardServices>();
 
 
 

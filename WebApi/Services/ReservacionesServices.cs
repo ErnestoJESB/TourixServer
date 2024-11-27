@@ -129,5 +129,23 @@ namespace WebApi.Services
                 return new Response<bool>(false, $"Sucedió un error: {ex.Message}");
             }
         }
+
+        public async Task<Response<List<ReservacionDTO>>> GetReservacionesByCliente(int id)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ClienteID", id, DbType.Int32);
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var reservaciones = await connection.QueryAsync<ReservacionDTO>("spGetReservacionesByCliente", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<List<ReservacionDTO>>(reservaciones.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<ReservacionDTO>>(false, $"Sucedió un error: {ex.Message}");
+            }
+        }
     }
 }

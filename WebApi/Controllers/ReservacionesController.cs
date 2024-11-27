@@ -30,18 +30,26 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateReservacion([FromBody] ReservacionCreateDTO request)
-        {
-            var response = await _reservacionesServices.CreateReservacion(request);
-
-            return Ok(response);
-        }
-
         [HttpGet("Agencia/{id}")]
         public async Task<IActionResult> GetReservacionesByAgencia(int id)
         {
             var response = await _reservacionesServices.GetReservacionesByAgencia(id);
+
+            return Ok(response);
+        }
+
+        [HttpGet("Cliente/{id}")]
+        public async Task<IActionResult> GetReservacionesByCliente(int id)
+        {
+            var response = await _reservacionesServices.GetReservacionesByCliente(id);
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateReservacion([FromBody] ReservacionCreateDTO request)
+        {
+            var response = await _reservacionesServices.CreateReservacion(request);
 
             return Ok(response);
         }
