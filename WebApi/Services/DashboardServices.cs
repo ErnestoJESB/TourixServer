@@ -87,5 +87,41 @@ namespace WebApi.Services
                 return new Response<object>(false, $"Sucedió un error: {ex.Message}", null);
             }
         }
+
+        public async Task<Response<object>> GetTotalActividades(int id)
+        {
+            try
+            {
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@AgenciaID", id, DbType.Int32);
+                    var actividades = await connection.QueryFirstOrDefaultAsync<object>("spGetTotalActividades", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<object>(true, "Total de actividades:", actividades);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<object>(false, $"Sucedió un error: {ex.Message}", null);
+            }
+        }
+
+        public async Task<Response<object>> GetTotalReservaciones(int id)
+        {
+            try
+            {
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@AgenciaID", id, DbType.Int32);
+                    var reservaciones = await connection.QueryFirstOrDefaultAsync<object>("spGetTotalReservaciones", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<object>(true, "Total de reservaciones:", reservaciones);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<object>(false, $"Sucedió un error: {ex.Message}", null);
+            }
+        }
     }
 }
