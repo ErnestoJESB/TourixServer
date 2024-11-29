@@ -16,5 +16,6 @@ namespace Domain.DTO
         public string Estado { get; set; }
         public decimal Total { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
+        public string? ImagenURL { get; set; }
     }
 }
