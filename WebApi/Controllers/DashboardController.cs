@@ -58,5 +58,12 @@ namespace WebApi.Controllers
             var response = await _dashboardServices.GetTotalReservaciones(id);
             return Ok(response);
         }
+
+        [HttpGet("TotalIngresos/{id}")]
+        public async Task<IActionResult> GetTotalIngresos(int id)
+        {
+            var response = await _dashboardServices.GetTotalIngresos(id);
+            return Ok(response);
+        }
     }
 }

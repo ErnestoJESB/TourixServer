@@ -10,5 +10,6 @@ namespace WebApi.Services
         public Task<Response<object>> GetVentasPorDia(int id);
         public Task<Response<object>> GetTotalActividades(int id);
         public Task<Response<object>> GetTotalReservaciones(int id);
+        public Task<Response<object>> GetTotalIngresos(int id);
     }
 }

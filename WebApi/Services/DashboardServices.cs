@@ -123,5 +123,23 @@ namespace WebApi.Services
                 return new Response<object>(false, $"Sucedió un error: {ex.Message}", null);
             }
         }
+
+        public async Task<Response<object>> GetTotalIngresos(int id)
+        {
+            try
+            {
+                using (var connection = _context.Database.GetDbConnection())
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@AgenciaID", id, DbType.Int32);
+                    var ganancias = await connection.QueryFirstOrDefaultAsync<object>("spGetTotalGanancias", parameters, commandType: CommandType.StoredProcedure);
+                    return new Response<object>(true, "Total de ganancias:", ganancias);
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Response<object>(false, $"Sucedió un error: {ex.Message}", null);
+            }
+        }
     }
 }
